@@ -8,7 +8,6 @@ import express from "express";
 const app = express();
 //const cors = require("cors");
 import cors from "cors";
-import fetch from "node-fetch";
 // const { response } = require("express");
 app.use(cors());
 // console.log(list);
