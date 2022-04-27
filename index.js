@@ -1,37 +1,49 @@
-const PORT = 8000
-const axios = require('axios')
-const cheerio = require('cheerio')
-const express = require('express')
-const app = express()
-const cors = require('cors')
-app.use(cors())
+const PORT = 8000;
+//const axios = require("axios");
+import axios from "axios";
+//const cheerio = require("cheerio");
+import cheerio from "cheerio";
+//const express = require("express");
+import express from "express";
+const app = express();
+//const cors = require("cors");
+import cors from "cors";
+import fetch from "node-fetch";
+// const { response } = require("express");
+app.use(cors());
+// console.log(list);
+app.use(express.json());
+const url = "https://privatephotoviewer.com/usr/";
 
-const url = 'https://www.theguardian.com/uk'
+app.get("/", function (req, res) {
+  res.json("This is my webscraper");
+});
+// app.post("/results", function (req, res) {
+//   // console.log(req);
+//   let data = req.body;
+//   console.log(data);
+//   return res.send(200);
+// });
+app.get("/results", (req, res) => {
+  const instaId = req.query.insta;
+  // if (!instaId) {
+  //   return res.send(400);
+  // }
+  axios(url + instaId)
+    .then((response) => {
+      const html = response.data;
+      const $ = cheerio.load(html);
+      const articles = [];
 
-app.get('/', function (req, res) {
-    res.json('This is my webscraper')
-})
+      $(".followerCount", html).each(function () {
+        console.log($(this).text());
+        const title = $(this).text();
+        articles.push(title);
+      });
+      res.json(articles);
+      console.log(articles);
+    })
+    .catch((err) => console.log(err));
+});
 
-app.get('/results', (req, res) => {
-    axios(url)
-        .then(response => {
-            const html = response.data
-            const $ = cheerio.load(html)
-            const articles = []
-
-            $('.fc-item__title', html).each(function () { //<-- cannot be a function expression
-                const title = $(this).text()
-                const url = $(this).find('a').attr('href')
-                articles.push({
-                    title,
-                    url
-                })
-            })
-            res.json(articles)
-        }).catch(err => console.log(err))
-
-})
-
-
-app.listen(PORT, () => console.log(`server running on PORT ${PORT}`))
-
+app.listen(PORT, () => console.log(`server running on PORT ${PORT}`));
