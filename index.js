@@ -1,4 +1,4 @@
-const PORT = 8000;
+const PORT = process.env.PORT || 8000;
 //const axios = require("axios");
 import axios from "axios";
 //const cheerio = require("cheerio");
