@@ -42,8 +42,10 @@ app.get("/results", function (req, res) {
       res.json(articles);
       console.log(articles);
     })
-    .catch((err) => console.log(err));
-  return res.send(200);
+    .catch((err) => {
+      res.send(400);
+      console.log(err);
+    });
 });
 
 app.listen(PORT, () => console.log(`server running on PORT ${PORT}`));
