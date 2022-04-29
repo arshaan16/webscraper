@@ -23,11 +23,11 @@ app.get("/", function (req, res) {
 //   console.log(data);
 //   return res.send(200);
 // });
-app.get("/results", (req, res) => {
+app.get("/results", function (req, res) {
   const instaId = req.query.insta;
-  // if (!instaId) {
-  //   return res.send(400);
-  // }
+  if (!instaId) {
+    return res.send(400);
+  }
   axios(url + instaId)
     .then((response) => {
       const html = response.data;
@@ -43,6 +43,7 @@ app.get("/results", (req, res) => {
       console.log(articles);
     })
     .catch((err) => console.log(err));
+  return res.send(200);
 });
 
 app.listen(PORT, () => console.log(`server running on PORT ${PORT}`));
